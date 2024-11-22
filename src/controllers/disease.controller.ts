@@ -8,6 +8,8 @@ import {
   getDiseaseById,
   addDishesToDisease,
   deleteDiseaseById,
+  checkExistingDisease,
+  diseaseExists,
 } from "../services/disease.services";
 
 function isPrismaError(error: unknown): error is { code: string } {
@@ -29,11 +31,22 @@ export const addDisease = async (
       return;
     }
 
+    const existingDisease = await checkExistingDisease(name);
+
+    if (existingDisease) {
+      res.status(400).json({ error: "Disease name must be unique" });
+      return;
+    }
+
     const disease = await createDisease(name, desc, prevention);
     res.status(201).json({ message: "Disease created successfully", disease });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to create disease" });
+    console.error("Error in addDisease:", error);
+    if (isPrismaError(error) && error.code === "P2002") {
+      res.status(400).json({ error: "Disease name must be unique" });
+    } else {
+      res.status(500).json({ error: "Failed to create disease" });
+    }
   }
 };
 
@@ -65,7 +78,7 @@ export const updateDisease = async (
       disease: updatedDisease,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error in updateDisease:", error);
     if (isPrismaError(error) && error.code === "P2025") {
       res.status(404).json({ error: "Disease not found" });
     } else {
@@ -95,7 +108,15 @@ export const getDisease = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const disease = await getDiseaseById(Number(id));
+    console.log(id, "id");
+    const numericId = Number(id);
+    if (isNaN(numericId)) {
+      res.status(400).json({ error: "Invalid ID: ID must be a number" });
+      return;
+    }
+
+    // Fetch disease by ID
+    const disease = await getDiseaseById(numericId);
 
     if (!disease) {
       res.status(404).json({ error: "Disease not found" });
@@ -121,6 +142,13 @@ export const addDishesToDiseaseController = async (
       res
         .status(400)
         .json({ error: "A non-empty array of dishIds is required" });
+      return;
+    }
+
+    const diseaseExistsOrNot = await diseaseExists(diseaseId);
+
+    if (!diseaseExistsOrNot) {
+      res.status(404).json({ error: "Disease not found" });
       return;
     }
 

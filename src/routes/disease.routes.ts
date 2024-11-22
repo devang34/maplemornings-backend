@@ -10,7 +10,6 @@ import {
   getDisease,
   updateDisease,
 } from "../controllers/disease.controller";
-import { getDishesByDiseaseController } from "../controllers/dish.controller";
 import { verifyToken } from "../middlewares/verifyToken";
 
 const router = express.Router();
@@ -21,11 +20,9 @@ router.put("/update/:id", verifyAdmin, updateDisease);
 
 router.get("/", verifyToken, getAllDiseases);
 
-router.get("/:id", getDisease);
+router.get("/:id", verifyToken, getDisease);
 
 router.put("/:id/dishes", verifyAdmin, addDishesToDiseaseController);
-
-router.get("/:id/dishes", getDishesByDiseaseController);
 
 router.delete("/:id", verifyAdmin, deleteDiseaseController);
 

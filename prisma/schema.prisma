@@ -29,6 +29,8 @@ model User {
 
   token    Token?
   orders   Order[]
+
+  Cart Cart?
 }
 
 model Dish {
@@ -41,6 +43,8 @@ model Dish {
   
   diseases Disease[] @relation("DishDiseases")
   orders   Order[]
+
+  CartItem CartItem[]
 }
 
 model Disease {
@@ -78,7 +82,46 @@ model Order {
 
   dishId        Int       
   dish          Dish      @relation(fields: [dishId], references: [id])
+
+  address       String
+  pincode       String
+
+  couponId      Int?      // Foreign key for applied coupon
+  coupon        Coupon?   @relation(fields: [couponId], references: [id]) 
 }
+
+model Cart {
+  id            Int       @id @default(autoincrement())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  userId        Int       @unique // Ensures only one cart per user
+  user          User      @relation(fields: [userId], references: [id])
+
+  items         CartItem[]
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  quantity  Int
+  dishId    Int
+  dish      Dish    @relation(fields: [dishId], references: [id])
+  cartId    Int
+  cart      Cart    @relation(fields: [cartId], references: [id])
+}
+
+model Coupon {
+  id                 Int       @id @default(autoincrement())
+  code               String    @unique
+  discountPercentage Float
+  maxDiscountAmount  Float
+  expiryDate         DateTime
+  isActive           Boolean   @default(true)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  orders             Order[]   // Relation with Order for applied coupons
+}
+
 
 enum OrderStatus {
   PENDING

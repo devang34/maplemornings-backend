@@ -15,6 +15,12 @@ export const createDisease = async (
   });
 };
 
+export const checkExistingDisease = async (name: string) => {
+  return await prisma.disease.findUnique({
+    where: { name },
+  });
+};
+
 // Service to update an existing disease
 export const updateDiseaseById = async (
   id: number,
@@ -33,6 +39,9 @@ export const getAllDisease = async () => {
 
 // Service to retrieve a single disease by ID
 export const getDiseaseById = async (id: number) => {
+  if (isNaN(id)) {
+    throw new Error("Invalid ID: ID must be a number");
+  }
   return await prisma.disease.findUnique({
     where: { id },
   });
@@ -60,5 +69,11 @@ export const addDishesToDisease = async (
 export const deleteDiseaseById = async (diseaseId: number) => {
   return await prisma.disease.delete({
     where: { id: diseaseId },
+  });
+};
+
+export const diseaseExists = async (diseaseId: string) => {
+  return prisma.disease.findUnique({
+    where: { id: Number(diseaseId) },
   });
 };

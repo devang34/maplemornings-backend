@@ -7,6 +7,9 @@ import {
   getDishesByDiseaseId,
   updateDishById,
 } from "../services/dish.services";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export const addDish = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -101,12 +104,21 @@ export const getDishesByDiseaseController = async (
   try {
     const { id: diseaseId } = req.params;
 
-    const dishes = await getDishesByDiseaseId(Number(diseaseId));
+    const disease = await prisma.disease.findUnique({
+      where: { id: Number(diseaseId) },
+    });
 
-    if (dishes.length === 0) {
-      res.status(404).json({ error: "No dishes found for this disease" });
+    if (!disease) {
+      res.status(404).json({ error: "Disease not found" });
       return;
     }
+
+    const dishes = await getDishesByDiseaseId(Number(diseaseId));
+
+    // if (dishes.length === 0) {
+    //   res.status(404).json({ error: "No dishes found for this disease" });
+    //   return;
+    // }
 
     res.status(200).json(dishes);
   } catch (error) {

@@ -35,6 +35,6 @@ export const verifyToken = (
       next();
     })
     .catch((error) => {
-      res.status(500).json({ error: `Token verification failed ${error}` });
+      res.status(500).json({ error: `Token verification failed` });
     });
 };

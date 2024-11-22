@@ -1,0 +1,29 @@
+{"level":"info","message":"SignUp process started for email: admin@gmail.com","timestamp":"2024-11-02 22:28:01"}
+{"level":"error","message":"Username is required.","timestamp":"2024-11-02 22:28:01"}
+{"level":"error","message":"SignUp process failed for email: admin@gmail.com, Error: Error: Username is required.\n    at /Users/rohitsingh/Developer/IL/maple-backend/src/services/auth.services.ts:21:13\n    at Generator.next (<anonymous>)\n    at /Users/rohitsingh/Developer/IL/maple-backend/src/services/auth.services.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/Users/rohitsingh/Developer/IL/maple-backend/src/services/auth.services.ts:4:12)\n    at signUp (/Users/rohitsingh/Developer/IL/maple-backend/src/services/auth.services.ts:11:48)\n    at /Users/rohitsingh/Developer/IL/maple-backend/src/controllers/auth.controller.ts:10:32\n    at Generator.next (<anonymous>)\n    at /Users/rohitsingh/Developer/IL/maple-backend/src/controllers/auth.controller.ts:9:71\n    at new Promise (<anonymous>)","timestamp":"2024-11-02 22:28:01"}
+{"level":"info","message":"SignUp process started for email: admin@gmail.com","timestamp":"2024-11-02 22:28:08"}
+{"level":"error","message":"Email or Username already exists for email: admin@gmail.com","timestamp":"2024-11-02 22:28:08"}
+{"level":"info","message":"SignUp process started for email: admin@gmail.com","timestamp":"2024-11-02 22:30:22"}
+{"level":"error","message":"Email or Username already exists for email: admin@gmail.com","timestamp":"2024-11-02 22:30:22"}
+{"level":"info","message":"SignUp process started for email: adminn@gmail.com","timestamp":"2024-11-02 22:30:42"}
+{"level":"info","message":"User created with ID: 8","timestamp":"2024-11-02 22:30:42"}
+{"level":"info","message":"SignUp process completed successfully for email: adminn@gmail.com","timestamp":"2024-11-02 22:30:42"}
+{"level":"info","message":"SignUp process started for email: aadmin@gmail.com","timestamp":"2024-11-03 12:09:25"}
+{"level":"info","message":"User created with ID: 9","timestamp":"2024-11-03 12:09:25"}
+{"level":"info","message":"SignUp process completed successfully for email: aadmin@gmail.com","timestamp":"2024-11-03 12:09:25"}
+{"level":"info","message":"SignUp process started for email: rohit@gmail.com","timestamp":"2024-11-03 12:26:27"}
+{"level":"error","message":"Email or Username already exists for email: rohit@gmail.com","timestamp":"2024-11-03 12:26:27"}
+{"level":"info","message":"SignUp process started for email: rohitt@gmail.com","timestamp":"2024-11-03 12:27:29"}
+{"level":"info","message":"User created with ID: 11","timestamp":"2024-11-03 12:27:29"}
+{"level":"info","message":"SignUp process completed successfully for email: rohitt@gmail.com","timestamp":"2024-11-03 12:27:29"}
+{"level":"info","message":"SignUp process started for email: admin@gmail.com","timestamp":"2024-11-21 16:32:00"}
+{"level":"info","message":"User created with ID: 1","timestamp":"2024-11-21 16:32:00"}
+{"level":"info","message":"SignUp process completed successfully for email: admin@gmail.com","timestamp":"2024-11-21 16:32:00"}
+{"level":"info","message":"SignUp process started for email: rohit@gmail.com","timestamp":"2024-11-22 01:10:48"}
+{"level":"info","message":"User created with ID: 2","timestamp":"2024-11-22 01:10:49"}
+{"level":"info","message":"SignUp process completed successfully for email: rohit@gmail.com","timestamp":"2024-11-22 01:10:49"}
+{"level":"info","message":"SignUp process started for email: rohit@gmail.com","timestamp":"2024-11-22 04:14:10"}
+{"level":"error","message":"Email or Username already exists for email: rohit@gmail.com","timestamp":"2024-11-22 04:14:10"}
+{"level":"info","message":"SignUp process started for email: rohitt@gmail.com","timestamp":"2024-11-22 04:14:16"}
+{"level":"info","message":"User created with ID: 4","timestamp":"2024-11-22 04:14:16"}
+{"level":"info","message":"SignUp process completed successfully for email: rohitt@gmail.com","timestamp":"2024-11-22 04:14:16"}

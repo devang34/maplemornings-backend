@@ -6,24 +6,75 @@ import {
   getAllOrdersService,
   getOrderByIdService,
 } from "../services/order.services";
+import { validateCouponService } from "../services/coupon.services";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
-    const { dishId, quantity } = req.body;
+    const { items, pincode, address, couponCode } = req.body; // items is an array of { dishId, quantity }
     const userId = res.locals.userId;
 
-    // Create the order in the database
-    const { order, dish, totalAmount } = await createOrderService(
-      userId,
-      dishId,
-      quantity
-    );
+    if (
+      !items ||
+      !Array.isArray(items) ||
+      items.length === 0 ||
+      !pincode ||
+      !address
+    ) {
+      res.status(400).json({
+        error:
+          "items (array of { dishId, quantity}), pincode, and address are required",
+      });
+      return;
+    }
+
+    // Call the service to calculate total amount and create the orders
+    const { orders, totalAmount: initialTotalAmount } =
+      await createOrderService(userId, items, address, pincode);
+
+    let discountAmount = 0;
+    let totalAmount = initialTotalAmount;
+
+    if (couponCode) {
+      try {
+        const coupon = await validateCouponService(couponCode);
+        const { discountPercentage, maxDiscountAmount } = coupon;
+
+        const calculatedDiscount =
+          (initialTotalAmount * discountPercentage) / 100;
+        discountAmount = Math.min(calculatedDiscount, maxDiscountAmount);
+
+        totalAmount = initialTotalAmount - discountAmount;
+
+        console.log(`Coupon applied. Discount: ${discountAmount}`);
+
+        await prisma.coupon.update({
+          where: { code: couponCode },
+          data: { isActive: false },
+        });
+      } catch (error: any) {
+        res.status(400).json({ error: error.message });
+        return;
+      }
+    }
+
+    if (totalAmount <= 0) {
+      res.status(400).json({ error: "Invalid total amount for order" });
+      return;
+    }
 
     // Generate the payment intent and retrieve client_secret
-    const clientSecret = await createPaymentIntentService(totalAmount);
+    const clientSecret = await createPaymentIntentService(
+      totalAmount,
+      orders.map((order) => order.id)
+    );
 
-    // Return the client_secret to the frontend
-    res.status(201).json({ clientSecret });
+    console.log("Generated clientSecret:", clientSecret);
+
+    // Return the client_secret and order details to the frontend
+    res.status(201).json({ clientSecret, orders });
   } catch (error: any) {
     console.error(error);
     if (error.message === "Dish not found") {

@@ -6,6 +6,7 @@ import {
   getUser,
   updateUserInfoAndGetDiseaseDetailsController,
 } from "../controllers/user.controller";
+import { getDishesByDiseaseController } from "../controllers/dish.controller";
 
 const router = express.Router();
 
@@ -17,5 +18,7 @@ router.put(
   verifyToken,
   updateUserInfoAndGetDiseaseDetailsController
 );
+
+router.get("/diseases/:id/", verifyToken, getDishesByDiseaseController);
 
 export default router;

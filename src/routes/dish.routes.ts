@@ -9,13 +9,14 @@ import {
   getDishByIdController,
   updateDishController,
 } from "../controllers/dish.controller";
+import { verifyToken } from "../middlewares/verifyToken";
 
 const router = express.Router();
 
 router.post("/add", verifyAdmin, addDish);
 router.put("/update/:id", verifyAdmin, updateDishController);
-router.get("/", getAllDishesController);
-router.get("/:id", getDishByIdController);
+router.get("/", verifyToken, getAllDishesController);
+router.get("/:id", verifyToken, getDishByIdController);
 router.delete("/:id", verifyAdmin, deleteDishController);
 
 export default router;
