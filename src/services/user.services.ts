@@ -25,3 +25,41 @@ export const updateUserAgeDiseaseAndGetDiseaseInfo = async (
 
   return { updatedUser, diseaseData };
 };
+export const createContactUsMessage = async (
+  email: string,
+  message: string,
+  userId: number
+) => {
+  try {
+    const newMessage = await prisma.contactUs.create({
+      data: {
+        email,
+        message,
+        userId, // userId is now guaranteed to be provided from the authenticated user
+      },
+    });
+
+    return newMessage;
+  } catch (error: any) {
+    throw new Error("Error creating contact message: " + error.message);
+  }
+};
+
+export const getContactUsMessages = async (userId: number | null) => {
+  try {
+    if (userId) {
+      // If userId is provided, retrieve messages for that user
+      return await prisma.contactUs.findMany({
+        where: { userId },
+        orderBy: { createdAt: "desc" }, // Optional: Sort by creation date
+      });
+    } else {
+      // If no userId, retrieve all messages
+      return await prisma.contactUs.findMany({
+        orderBy: { createdAt: "desc" }, // Optional: Sort by creation date
+      });
+    }
+  } catch (error: any) {
+    throw new Error("Error retrieving contact messages: " + error.message);
+  }
+};

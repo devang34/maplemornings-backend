@@ -31,20 +31,30 @@ model User {
   orders   Order[]
 
   Cart Cart?
+
+  Otp Otp[]
+
+  FavoriteDish FavoriteDish[]
+
+  ContactUs ContactUs[]
 }
 
 model Dish {
-  id       Int     @id @default(autoincrement())
-  name     String
-  info     String 
-  meals    String  
-  price    String
-  image    String
+  id                 Int     @id @default(autoincrement())
+  name               String
+  info               String 
+  meals              String  
+  price              String
+  image              String
+  calorie            String?
   
-  diseases Disease[] @relation("DishDiseases")
-  orders   Order[]
+  diseases           Disease[] @relation("DishDiseases")
+  orders             Order[]
+  refrence           String?
+  restaurantName     String?
+  CartItem           CartItem[]
 
-  CartItem CartItem[]
+  FavoriteDish       FavoriteDish[]
 }
 
 model Disease {
@@ -86,7 +96,7 @@ model Order {
   address       String
   pincode       String
 
-  couponId      Int?      // Foreign key for applied coupon
+  couponId      Int?      
   coupon        Coupon?   @relation(fields: [couponId], references: [id]) 
 }
 
@@ -94,7 +104,7 @@ model Cart {
   id            Int       @id @default(autoincrement())
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  userId        Int       @unique // Ensures only one cart per user
+  userId        Int       @unique 
   user          User      @relation(fields: [userId], references: [id])
 
   items         CartItem[]
@@ -119,9 +129,45 @@ model Coupon {
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 
-  orders             Order[]   // Relation with Order for applied coupons
+  orders             Order[]   
 }
 
+model Otp {
+  id        Int   @id @default(autoincrement()) 
+  userId    Int      
+  otpCode   String   
+  expiryAt  DateTime 
+  used      Boolean  @default(false) 
+  createdAt DateTime @default(now())  
+  updatedAt DateTime @updatedAt       
+
+  user      User     @relation(fields: [userId], references: [id]) 
+}
+
+model FavoriteDish {
+  id       Int    @id @default(autoincrement()) 
+  userId   Int    
+  dishId   Int    
+
+  user     User   @relation(fields: [userId], references: [id]) 
+  dish     Dish   @relation(fields: [dishId], references: [id]) 
+
+  createdAt DateTime @default(now())  
+  updatedAt DateTime @updatedAt       
+
+  @@unique([userId, dishId]) 
+}
+
+model ContactUs {
+  id          Int      @id @default(autoincrement()) 
+  userId      Int?     
+  email       String   
+  message     String   
+  createdAt   DateTime @default(now()) 
+  updatedAt   DateTime @updatedAt      
+
+  user        User?    @relation(fields: [userId], references: [id]) 
+}
 
 enum OrderStatus {
   PENDING
